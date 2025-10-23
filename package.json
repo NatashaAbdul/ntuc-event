@@ -1,7 +1,6 @@
 {
   "name": "device-player",
   "version": "1.0.0",
-  "type": "module",
   "description": "Local video and image player for specific devices",
   "main": "server.js",
   "scripts": {
