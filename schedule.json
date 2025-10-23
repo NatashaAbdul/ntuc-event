@@ -2,7 +2,297 @@
   "D1": {
     "type": "image",
     "file": "B1-side 1-1.1.jpg",
-    "switchAfterMins": 0.1,  
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+   "D2": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D3": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D4": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D5": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D6": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D7": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D8": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D9": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D10": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D11": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D12": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D13": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D14": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D15": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D16": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D17": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D18": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D19": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D20": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D21": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D22": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D23": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D24": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D25": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D26": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D27": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D28": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D29": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAfterMins": 0
+    }
+  },
+  "D30": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAfterMins": 2,  
     "next": {
       "type": "video",
       "file": "B1-side 1-1.2.mp4",

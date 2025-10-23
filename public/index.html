@@ -38,106 +38,89 @@
     let switchTimer = null;
     let countdownInterval = null;
     let switchTime = null;
-    let preloadedAssets = {}; // cache
 
     async function fetchSchedule() {
       try {
         const res = await fetch(`${SERVER}/schedule?device=${device}`);
         const data = await res.json();
-        const schedule = data.content;
-
-        // Preload all assets
-        preloadAssets(schedule);
-
-        // Start content
-        updateContent(schedule);
+        const content = data.content;
+        updateContent(content);
       } catch (err) {
         console.error("[ERROR] Fetch schedule failed:", err);
       }
     }
 
-    function preloadAssets(content) {
-      if (!content) return;
-      const file = content.file;
-
-      if (!preloadedAssets[file]) {
-        if (file.endsWith(".mp4")) {
-          const video = document.createElement("video");
-          video.src = `${SERVER}/assets/${file}`;
-          video.preload = "auto";
-          video.muted = true;
-          video.playsInline = true;
-          preloadedAssets[file] = video;
-        } else {
-          const img = new Image();
-          img.src = `${SERVER}/assets/${file}`;
-          preloadedAssets[file] = img;
-        }
-      }
-
-      if (content.next) preloadAssets(content.next);
-    }
-
     function updateContent(content) {
       if (!content || (currentContent && content.file === currentContent.file)) return;
 
+      // Remove old content
       container.innerHTML = "";
       currentContent = content;
 
       if (content.type === "video") {
-        playVideoFromCache(content);
+        playVideo(content);
       } else if (content.type === "image") {
-        playImageFromCache(content);
+        playImage(content);
       }
 
-      setupCountdown(content.switchAfterMins);
+      setupCountdown(content.switchAt);
     }
 
-    function playVideoFromCache(content) {
-      const cachedVideo = preloadedAssets[content.file];
-      const video = cachedVideo.cloneNode(true); // clone so multiple instances won't conflict
+    function playVideo(content) {
+      const video = document.createElement("video");
+      video.src = `${SERVER}/assets/${content.file}`;
       video.autoplay = true;
+      video.loop = false; // manual loop for control
+      video.muted = true;
+      video.playsInline = true;
       video.controls = false;
+      video.preload = "auto";
 
       container.appendChild(video);
 
-      // Manual loop for Samsung monitors
       video.addEventListener("ended", () => {
-        if (Date.now() < switchTime) {
+        // Loop until switchTime
+        if (!switchTime || Date.now() < switchTime) {
           video.currentTime = 0;
           video.play();
         }
       });
 
-      setupSwitchTimer(content.switchAfterMins, content.next);
+      setupSwitchTimer(content.switchAt, content.next);
     }
 
-    function playImageFromCache(content) {
-      const cachedImg = preloadedAssets[content.file];
-      const img = cachedImg.cloneNode(true);
+    function playImage(content) {
+      const img = new Image();
+      img.src = `${SERVER}/assets/${content.file}`;
       container.appendChild(img);
 
-      setupSwitchTimer(content.switchAfterMins, content.next);
+      setupSwitchTimer(content.switchAt, content.next);
     }
 
-    function setupSwitchTimer(switchAfterMins, nextContent) {
+    function setupSwitchTimer(switchAt, nextContent) {
       if (switchTimer) clearTimeout(switchTimer);
-      if (!switchAfterMins || switchAfterMins <= 0) {
-        switchTime = Infinity; // loop video indefinitely
+      if (!switchAt) {
+        switchTime = Infinity; // loop indefinitely
         return;
       }
 
-      const msUntilSwitch = switchAfterMins * 60 * 1000;
-      switchTime = Date.now() + msUntilSwitch;
+      switchTime = switchAt;
+      const msUntilSwitch = switchAt - Date.now();
+
+      if (msUntilSwitch <= 0) {
+        // If already passed, switch immediately
+        if (nextContent) updateContent(nextContent);
+        return;
+      }
 
       switchTimer = setTimeout(() => {
         if (nextContent) updateContent(nextContent);
       }, msUntilSwitch);
     }
 
-    function setupCountdown(switchAfterMins) {
+    function setupCountdown(switchAt) {
       if (countdownInterval) clearInterval(countdownInterval);
-      if (!switchAfterMins || switchAfterMins <= 0) return;
+      if (!switchAt) return;
 
       countdownInterval = setInterval(() => {
         const remaining = switchTime - Date.now();
@@ -152,7 +135,11 @@
       }, 1000);
     }
 
+    // Initial fetch
     fetchSchedule();
+
+    // Optional: poll schedule every 1 min
+    setInterval(fetchSchedule, 60000);
   </script>
 </body>
 </html>
