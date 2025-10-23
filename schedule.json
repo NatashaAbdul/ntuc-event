@@ -81,81 +81,81 @@
   },
   "D9": {
     "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "file": "B1-side 2-1.1.jpg",
     "switchAfterMins": 1,  
     "next": {
-      "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "type": "image",
+      "file": "B1-side 2-1.2.jpg",
       "switchAfterMins": 1
     }
   },
   "D10": {
     "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "file": "B1-side 2-2.1.jpg",
     "switchAfterMins": 1,  
     "next": {
       "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "file": "B1-side 2-2.2.mp4",
       "switchAfterMins": 1
     }
   },
   "D11": {
     "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "file": "B1-side 2-3.1.jpg",
     "switchAfterMins": 1,  
     "next": {
-      "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "type": "image",
+      "file": "B1-side 2-3.2.jpg",
       "switchAfterMins": 1
     }
   },
   "D12": {
     "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "file": "B1-side 2-4.1.jpg",
     "switchAfterMins": 1,  
     "next": {
       "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "file": "B1-side 2-4.2.mp4",
       "switchAfterMins": 1
     }
   },
   "D13": {
     "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "file": "B1-side 2-5.1.jpg",
     "switchAfterMins": 1,  
     "next": {
-      "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "type": "image",
+      "file": "B1-side 2-5.2.jpg",
       "switchAfterMins": 1
     }
   },
   "D14": {
     "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "file": "B1-side 2-6.1.jpg",
     "switchAfterMins": 1,  
     "next": {
-      "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "type": "image",
+      "file": "B1-side 2-6.2.jpg",
       "switchAfterMins": 1
     }
   },
   "D15": {
     "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "file": "B1-side 2-7.1.jpg",
     "switchAfterMins": 1,  
     "next": {
       "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "file": "B1-side 2-7.2.mp4",
       "switchAfterMins": 1
     }
   },
   "D16": {
-    "type": "image",
-    "file": "B1-side 1-1.1.jpg",
+    "type": "video",
+    "file": "B1-side 2-8.1.mp4",
     "switchAfterMins": 1,  
     "next": {
       "type": "video",
-      "file": "B1-side 1-1.2.mp4",
+      "file": "B1-side 2-8.2.mp4",
       "switchAfterMins": 1
     }
   },
