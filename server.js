@@ -22,7 +22,7 @@ app.get("/schedule", (req, res) => {
   if (!device) return res.status(400).json({ error: "Device ID required" });
 
   const schedule = loadSchedule();
-  const deviceData = schedule[device] || schedule["default"];
+  const deviceData = schedule[device];
 
   res.json({
     now: Date.now(),
