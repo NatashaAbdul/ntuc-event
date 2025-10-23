@@ -37,6 +37,7 @@
     let currentContent = null;
     let switchTimer = null;
     let countdownInterval = null;
+    let switchTime = null;
 
     async function fetchSchedule() {
       try {
@@ -53,53 +54,73 @@
       if (!content || (currentContent && content.file === currentContent.file)) return;
 
       container.innerHTML = ""; // clear old content
-      const filePath = `${SERVER}/assets/${content.file}`;
       currentContent = content;
 
-      let mediaElement;
       if (content.type === "video") {
-        mediaElement = document.createElement("video");
-        mediaElement.src = filePath;
-        mediaElement.autoplay = true;
-        mediaElement.loop = true;
-        mediaElement.muted = true;
-        mediaElement.playsInline = true;
-        mediaElement.controls = false;
-        container.appendChild(mediaElement);
-      } else {
-        mediaElement = document.createElement("img");
-        mediaElement.src = filePath;
-        container.appendChild(mediaElement);
+        playVideoUntilSwitch(`${SERVER}/assets/${content.file}`, content.switchAfterMins, content.next);
+      } else if (content.type === "image") {
+        const img = document.createElement("img");
+        img.src = `${SERVER}/assets/${content.file}`;
+        container.appendChild(img);
+
+        setupSwitchTimer(content.switchAfterMins, content.next);
       }
 
-      // Clear previous timers
+      setupCountdown(content.switchAfterMins);
+    }
+
+    function playVideoUntilSwitch(filePath, switchAfterMins, nextContent) {
+      const video = document.createElement("video");
+      video.src = filePath;
+      video.muted = true;
+      video.playsInline = true;
+      video.autoplay = true;
+      video.controls = false;
+      video.preload = "auto";
+
+      container.appendChild(video);
+
+      // Manual loop for Samsung monitors
+      video.addEventListener("ended", () => {
+        if (Date.now() < switchTime) {
+          video.currentTime = 0;
+          video.play();
+        }
+      });
+
+      setupSwitchTimer(switchAfterMins, nextContent);
+    }
+
+    function setupSwitchTimer(switchAfterMins, nextContent) {
       if (switchTimer) clearTimeout(switchTimer);
-      if (countdownInterval) clearInterval(countdownInterval);
-
-      // Schedule next switch if switchAfterMins is set
-      if (content.switchAfterMins && content.switchAfterMins > 0) {
-        const msUntilSwitch = content.switchAfterMins * 60 * 1000;
-        const switchTime = Date.now() + msUntilSwitch;
-
-        // Console countdown for debugging
-        countdownInterval = setInterval(() => {
-          const remaining = switchTime - Date.now();
-          if (remaining <= 0) {
-            console.log(`[DEBUG][${device}] Switching content now: ${content.next ? content.next.file : 'reload schedule'}`);
-            clearInterval(countdownInterval);
-          } else {
-            const seconds = Math.floor((remaining / 1000) % 60);
-            const minutes = Math.floor((remaining / 1000 / 60));
-            console.log(`[DEBUG][${device}] ${content.file} switches in ${minutes}:${seconds.toString().padStart(2,'0')}`);
-          }
-        }, 1000);
-
-        // Switch timer
-        switchTimer = setTimeout(() => {
-          if (content.next) updateContent(content.next);
-          else fetchSchedule();
-        }, msUntilSwitch);
+      if (!switchAfterMins || switchAfterMins <= 0) {
+        switchTime = Infinity; // loop video indefinitely
+        return;
       }
+
+      const msUntilSwitch = switchAfterMins * 60 * 1000;
+      switchTime = Date.now() + msUntilSwitch;
+
+      switchTimer = setTimeout(() => {
+        if (nextContent) updateContent(nextContent);
+      }, msUntilSwitch);
+    }
+
+    function setupCountdown(switchAfterMins) {
+      if (countdownInterval) clearInterval(countdownInterval);
+      if (!switchAfterMins || switchAfterMins <= 0) return;
+
+      countdownInterval = setInterval(() => {
+        const remaining = switchTime - Date.now();
+        if (remaining <= 0) {
+          console.log(`[DEBUG][${device}] Switching content now: ${currentContent.next ? currentContent.next.file : 'reload schedule'}`);
+          clearInterval(countdownInterval);
+        } else {
+          const seconds = Math.floor((remaining / 1000) % 60);
+          const minutes = Math.floor((remaining / 1000 / 60));
+          console.log(`[DEBUG][${device}] ${currentContent.file} switches in ${minutes}:${seconds.toString().padStart(2,'0')}`);
+        }
+      }, 1000);
     }
 
     // Initial fetch
