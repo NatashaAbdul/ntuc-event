@@ -37,109 +37,75 @@
     let currentContent = null;
     let switchTimer = null;
     let countdownInterval = null;
-    let switchTime = null;
 
     async function fetchSchedule() {
       try {
         const res = await fetch(`${SERVER}/schedule?device=${device}`);
         const data = await res.json();
         const content = data.content;
-        updateContent(content);
+        // Start looping the two contents indefinitely
+        if (content) startLoop(content, content.next);
       } catch (err) {
         console.error("[ERROR] Fetch schedule failed:", err);
       }
     }
 
-    function updateContent(content) {
-      if (!content || (currentContent && content.file === currentContent.file)) return;
+    function startLoop(firstContent, secondContent) {
+      // Recursive function to alternate between two contents
+      function showContent(content, nextContent) {
+        container.innerHTML = "";
+        currentContent = content;
 
-      // Remove old content
-      container.innerHTML = "";
-      currentContent = content;
-
-      if (content.type === "video") {
-        playVideo(content);
-      } else if (content.type === "image") {
-        playImage(content);
-      }
-
-      setupCountdown(content.switchAt);
-    }
-
-    function playVideo(content) {
-      const video = document.createElement("video");
-      video.src = `${SERVER}/assets/${content.file}`;
-      video.autoplay = true;
-      video.loop = false; // manual loop for control
-      video.muted = true;
-      video.playsInline = true;
-      video.controls = false;
-      video.preload = "auto";
-
-      container.appendChild(video);
-
-      video.addEventListener("ended", () => {
-        // Loop until switchTime
-        if (!switchTime || Date.now() < switchTime) {
-          video.currentTime = 0;
-          video.play();
+        if (content.type === "video") {
+          const video = document.createElement("video");
+          video.src = `${SERVER}/assets/${content.file}`;
+          video.autoplay = true;
+          video.loop = true; // smooth looping
+          video.muted = true;
+          video.playsInline = true;
+          video.controls = false;
+          video.preload = "auto";
+          container.appendChild(video);
+        } else {
+          const img = new Image();
+          img.src = `${SERVER}/assets/${content.file}`;
+          container.appendChild(img);
         }
-      });
 
-      setupSwitchTimer(content.switchAt, content.next);
-    }
+        setupCountdown(content.switchAfterMins);
 
-    function playImage(content) {
-      const img = new Image();
-      img.src = `${SERVER}/assets/${content.file}`;
-      container.appendChild(img);
-
-      setupSwitchTimer(content.switchAt, content.next);
-    }
-
-    function setupSwitchTimer(switchAt, nextContent) {
-      if (switchTimer) clearTimeout(switchTimer);
-      if (!switchAt) {
-        switchTime = Infinity; // loop indefinitely
-        return;
+        // Set timer to switch to next content
+        if (switchTimer) clearTimeout(switchTimer);
+        const msUntilSwitch = content.switchAfterMins * 60 * 1000;
+        switchTimer = setTimeout(() => {
+          showContent(nextContent, content); // swap back and forth
+        }, msUntilSwitch);
       }
 
-      switchTime = switchAt;
-      const msUntilSwitch = switchAt - Date.now();
-
-      if (msUntilSwitch <= 0) {
-        // If already passed, switch immediately
-        if (nextContent) updateContent(nextContent);
-        return;
-      }
-
-      switchTimer = setTimeout(() => {
-        if (nextContent) updateContent(nextContent);
-      }, msUntilSwitch);
+      showContent(firstContent, secondContent);
     }
 
-    function setupCountdown(switchAt) {
+    function setupCountdown(switchAfterMins) {
       if (countdownInterval) clearInterval(countdownInterval);
-      if (!switchAt) return;
+      if (!switchAfterMins) return;
+
+      let remainingMs = switchAfterMins * 60 * 1000;
 
       countdownInterval = setInterval(() => {
-        const remaining = switchTime - Date.now();
-        if (remaining <= 0) {
-          console.log(`[DEBUG][${device}] Switching content now: ${currentContent.next ? currentContent.next.file : 'reload schedule'}`);
+        remainingMs -= 1000;
+        if (remainingMs <= 0) {
+          console.log(`[DEBUG][${device}] Switching content now: ${currentContent.next ? currentContent.next.file : 'loop'}`);
           clearInterval(countdownInterval);
         } else {
-          const seconds = Math.floor((remaining / 1000) % 60);
-          const minutes = Math.floor((remaining / 1000 / 60));
+          const minutes = Math.floor((remainingMs / 1000 / 60));
+          const seconds = Math.floor((remainingMs / 1000) % 60);
           console.log(`[DEBUG][${device}] ${currentContent.file} switches in ${minutes}:${seconds.toString().padStart(2,'0')}`);
         }
       }, 1000);
     }
 
-    // Initial fetch
+    // Start
     fetchSchedule();
-
-    // Optional: poll schedule every 1 min
-    setInterval(fetchSchedule, 60000);
   </script>
 </body>
 </html>
