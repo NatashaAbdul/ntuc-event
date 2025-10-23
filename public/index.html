@@ -16,7 +16,7 @@
     video, img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* full screen */
+      object-fit: cover;
       object-position: center;
       background-color: black;
     }
@@ -36,12 +36,17 @@
 
     let currentContent = null;
     let switchTimer = null;
+    let countdownInterval = null;
 
     async function fetchSchedule() {
-      const res = await fetch(`${SERVER}/schedule?device=${device}`);
-      const data = await res.json();
-      const content = data.content;
-      updateContent(content);
+      try {
+        const res = await fetch(`${SERVER}/schedule?device=${device}`);
+        const data = await res.json();
+        const content = data.content;
+        updateContent(content);
+      } catch (err) {
+        console.error("[ERROR] Fetch schedule failed:", err);
+      }
     }
 
     function updateContent(content) {
@@ -52,12 +57,11 @@
       currentContent = content;
 
       let mediaElement;
-
       if (content.type === "video") {
         mediaElement = document.createElement("video");
         mediaElement.src = filePath;
         mediaElement.autoplay = true;
-        mediaElement.loop = true; // keeps looping until switch
+        mediaElement.loop = true;
         mediaElement.muted = true;
         mediaElement.playsInline = true;
         mediaElement.controls = false;
@@ -68,12 +72,29 @@
         container.appendChild(mediaElement);
       }
 
-      // Clear any existing timer
+      // Clear previous timers
       if (switchTimer) clearTimeout(switchTimer);
+      if (countdownInterval) clearInterval(countdownInterval);
 
-      // Schedule switch if `switchAfterMins` is set
+      // Schedule next switch if switchAfterMins is set
       if (content.switchAfterMins && content.switchAfterMins > 0) {
         const msUntilSwitch = content.switchAfterMins * 60 * 1000;
+        const switchTime = Date.now() + msUntilSwitch;
+
+        // Console countdown for debugging
+        countdownInterval = setInterval(() => {
+          const remaining = switchTime - Date.now();
+          if (remaining <= 0) {
+            console.log(`[DEBUG][${device}] Switching content now: ${content.next ? content.next.file : 'reload schedule'}`);
+            clearInterval(countdownInterval);
+          } else {
+            const seconds = Math.floor((remaining / 1000) % 60);
+            const minutes = Math.floor((remaining / 1000 / 60));
+            console.log(`[DEBUG][${device}] ${content.file} switches in ${minutes}:${seconds.toString().padStart(2,'0')}`);
+          }
+        }, 1000);
+
+        // Switch timer
         switchTimer = setTimeout(() => {
           if (content.next) updateContent(content.next);
           else fetchSchedule();
@@ -81,9 +102,8 @@
       }
     }
 
+    // Initial fetch
     fetchSchedule();
-    // Check every 1 minute for new updates
-    setInterval(fetchSchedule, 30000);
   </script>
 </body>
 </html>
