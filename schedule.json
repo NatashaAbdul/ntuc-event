@@ -2,11 +2,11 @@
   "D1": {
     "type": "image",
     "file": "B1-side 1-1.1.jpg",
-    "switchAt": 1761234023552,
+    "switchAfterMins": 2,
     "next": {
       "type": "video",
       "file": "B1-side 1-1.2.mp4",
-      "switchAt": null
+      "switchAfterMins": 2
     }
   }
 }

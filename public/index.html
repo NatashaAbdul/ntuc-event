@@ -14,11 +14,11 @@
       overflow: hidden;
     }
     video, img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* Change this line */
-        object-position: center;
-        background-color: black;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* full screen */
+      object-position: center;
+      background-color: black;
     }
     video::-webkit-media-controls {
       display: none !important;
@@ -31,7 +31,7 @@
   <script>
     const container = document.getElementById("container");
     const params = new URLSearchParams(window.location.search);
-    const device = params.get("device") || "DEVICE-001";
+    const device = params.get("device") || "D1";
     const SERVER = window.location.origin;
 
     let currentContent = null;
@@ -51,27 +51,30 @@
       const filePath = `${SERVER}/assets/${content.file}`;
       currentContent = content;
 
+      let mediaElement;
+
       if (content.type === "video") {
-        const video = document.createElement("video");
-        video.src = filePath;
-        video.autoplay = true;
-        video.loop = true;
-        video.muted = true;
-        video.playsInline = true;
-        video.controls = false;
-        container.appendChild(video);
+        mediaElement = document.createElement("video");
+        mediaElement.src = filePath;
+        mediaElement.autoplay = true;
+        mediaElement.loop = true; // keeps looping until switch
+        mediaElement.muted = true;
+        mediaElement.playsInline = true;
+        mediaElement.controls = false;
+        container.appendChild(mediaElement);
       } else {
-        const img = document.createElement("img");
-        img.src = filePath;
-        container.appendChild(img);
+        mediaElement = document.createElement("img");
+        mediaElement.src = filePath;
+        container.appendChild(mediaElement);
       }
 
+      // Clear any existing timer
       if (switchTimer) clearTimeout(switchTimer);
 
-      if (content.switchAt && Date.now() < content.switchAt) {
-        const msUntilSwitch = content.switchAt - Date.now();
+      // Schedule switch if `switchAfterMins` is set
+      if (content.switchAfterMins && content.switchAfterMins > 0) {
+        const msUntilSwitch = content.switchAfterMins * 60 * 1000;
         switchTimer = setTimeout(() => {
-          // switch to next content (if any)
           if (content.next) updateContent(content.next);
           else fetchSchedule();
         }, msUntilSwitch);
