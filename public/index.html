@@ -38,45 +38,66 @@
     let switchTimer = null;
     let countdownInterval = null;
     let switchTime = null;
+    let preloadedAssets = {}; // cache
 
     async function fetchSchedule() {
       try {
         const res = await fetch(`${SERVER}/schedule?device=${device}`);
         const data = await res.json();
-        const content = data.content;
-        updateContent(content);
+        const schedule = data.content;
+
+        // Preload all assets
+        preloadAssets(schedule);
+
+        // Start content
+        updateContent(schedule);
       } catch (err) {
         console.error("[ERROR] Fetch schedule failed:", err);
       }
     }
 
+    function preloadAssets(content) {
+      if (!content) return;
+      const file = content.file;
+
+      if (!preloadedAssets[file]) {
+        if (file.endsWith(".mp4")) {
+          const video = document.createElement("video");
+          video.src = `${SERVER}/assets/${file}`;
+          video.preload = "auto";
+          video.muted = true;
+          video.playsInline = true;
+          preloadedAssets[file] = video;
+        } else {
+          const img = new Image();
+          img.src = `${SERVER}/assets/${file}`;
+          preloadedAssets[file] = img;
+        }
+      }
+
+      if (content.next) preloadAssets(content.next);
+    }
+
     function updateContent(content) {
       if (!content || (currentContent && content.file === currentContent.file)) return;
 
-      container.innerHTML = ""; // clear old content
+      container.innerHTML = "";
       currentContent = content;
 
       if (content.type === "video") {
-        playVideoUntilSwitch(`${SERVER}/assets/${content.file}`, content.switchAfterMins, content.next);
+        playVideoFromCache(content);
       } else if (content.type === "image") {
-        const img = document.createElement("img");
-        img.src = `${SERVER}/assets/${content.file}`;
-        container.appendChild(img);
-
-        setupSwitchTimer(content.switchAfterMins, content.next);
+        playImageFromCache(content);
       }
 
       setupCountdown(content.switchAfterMins);
     }
 
-    function playVideoUntilSwitch(filePath, switchAfterMins, nextContent) {
-      const video = document.createElement("video");
-      video.src = filePath;
-      video.muted = true;
-      video.playsInline = true;
+    function playVideoFromCache(content) {
+      const cachedVideo = preloadedAssets[content.file];
+      const video = cachedVideo.cloneNode(true); // clone so multiple instances won't conflict
       video.autoplay = true;
       video.controls = false;
-      video.preload = "auto";
 
       container.appendChild(video);
 
@@ -88,7 +109,15 @@
         }
       });
 
-      setupSwitchTimer(switchAfterMins, nextContent);
+      setupSwitchTimer(content.switchAfterMins, content.next);
+    }
+
+    function playImageFromCache(content) {
+      const cachedImg = preloadedAssets[content.file];
+      const img = cachedImg.cloneNode(true);
+      container.appendChild(img);
+
+      setupSwitchTimer(content.switchAfterMins, content.next);
     }
 
     function setupSwitchTimer(switchAfterMins, nextContent) {
@@ -123,7 +152,6 @@
       }, 1000);
     }
 
-    // Initial fetch
     fetchSchedule();
   </script>
 </body>
