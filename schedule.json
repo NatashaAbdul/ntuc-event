@@ -1,0 +1,17 @@
+{
+  "default": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAt": null
+  },
+  "D1": {
+    "type": "image",
+    "file": "B1-side 1-1.1.jpg",
+    "switchAt": 1761232117237,
+    "next": {
+      "type": "video",
+      "file": "B1-side 1-1.2.mp4",
+      "switchAt": null
+    }
+  }
+}

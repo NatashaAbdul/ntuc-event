@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Device Player</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    video, img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Change this line */
+        object-position: center;
+        background-color: black;
+    }
+    video::-webkit-media-controls {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+
+  <script>
+    const container = document.getElementById("container");
+    const params = new URLSearchParams(window.location.search);
+    const device = params.get("device") || "DEVICE-001";
+    const SERVER = window.location.origin;
+
+    let currentContent = null;
+    let switchTimer = null;
+
+    async function fetchSchedule() {
+      const res = await fetch(`${SERVER}/schedule?device=${device}`);
+      const data = await res.json();
+      const content = data.content;
+      updateContent(content);
+    }
+
+    function updateContent(content) {
+      if (!content || (currentContent && content.file === currentContent.file)) return;
+
+      container.innerHTML = ""; // clear old content
+      const filePath = `${SERVER}/assets/${content.file}`;
+      currentContent = content;
+
+      if (content.type === "video") {
+        const video = document.createElement("video");
+        video.src = filePath;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.controls = false;
+        container.appendChild(video);
+      } else {
+        const img = document.createElement("img");
+        img.src = filePath;
+        container.appendChild(img);
+      }
+
+      if (switchTimer) clearTimeout(switchTimer);
+
+      if (content.switchAt && Date.now() < content.switchAt) {
+        const msUntilSwitch = content.switchAt - Date.now();
+        switchTimer = setTimeout(() => {
+          // switch to next content (if any)
+          if (content.next) updateContent(content.next);
+          else fetchSchedule();
+        }, msUntilSwitch);
+      }
+    }
+
+    fetchSchedule();
+    // Check every 1 minute for new updates
+    setInterval(fetchSchedule, 60000);
+  </script>
+</body>
+</html>
