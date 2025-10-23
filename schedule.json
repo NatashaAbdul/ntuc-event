@@ -255,7 +255,7 @@
     "switchAfterMins": 1,  
     "next": {
       "type": "video",
-      "file": "B2-side 1-8.2.mp4",
+      "file": "B2-side 2-2.2.mp4",
       "switchAfterMins": 1
     }
   },
@@ -265,7 +265,7 @@
     "switchAfterMins": 1,  
     "next": {
       "type": "video",
-      "file": "B2-side 1-8.2.mp4",
+      "file": "B2-side 2-3.2.mp4",
       "switchAfterMins": 1
     }
   },
